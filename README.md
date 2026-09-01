@@ -3,8 +3,8 @@
 Owner-maintained research carrier for the request-owned runtime preserved in
 the archived vLLM-HUST repository.
 
-**Status: research migration scaffold (`import_only`). This repository is not
-an installable runtime implementation and makes no current support claim.**
+**Status: installable contract/reference package (`import_only`). It contains
+no vLLM activation hook and makes no current runtime support claim.**
 
 StateHarbor explored request-owned KV allocation, scheduler authority,
 attention and sampling transport, deterministic output aggregation, background
@@ -12,9 +12,13 @@ D2H drain, and idle-bandwidth H2D restore. The legacy implementation crossed
 most vLLM process boundaries; it must not be copied back as one import-time
 plugin.
 
-The migration should first separate neutral host seams from owner-maintained
-policy and runtime components. Until those contracts are reviewed, the package
-only supplies static metadata for provenance and architecture work.
+The package now preserves the dependency-neutral request-owner protocol,
+reference coordinator/worker state machines, and receipt-driven window policy
+from the legacy work. Scheduler, worker, KV allocation, transport, and device
+integration remain outside this package until public host contracts exist.
+
+Importing `vllm_hust_stateharbor` has no side effects. The reference layer can
+be tested on CPU without installing vLLM or torch.
 
 ```bash
 pip install -e .
