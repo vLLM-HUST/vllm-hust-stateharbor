@@ -1,0 +1,46 @@
+{
+  "schema_version": "0.2-experimental",
+  "extension_id": "org.vllm-hust.stateharbor",
+  "extension_version": "0.1.0.dev0",
+  "kind": "runtime_bridge",
+  "host": {
+    "provider": "vllm",
+    "name": "vllm",
+    "version_range": ">=0.23,<0.24"
+  },
+  "runtime": {
+    "type": "python",
+    "process_scope": "vllm-scheduler-worker-executor",
+    "isolation": "trusted_in_process"
+  },
+  "lifecycle_owner": "vllm",
+  "protocols": [
+    {"name": "vllm.request-owned-kv", "version_range": null},
+    {"name": "vllm.request-owned-output-transport", "version_range": null},
+    {"name": "vllm.background-kv-restore", "version_range": null}
+  ],
+  "implementation": [
+    {
+      "type": "python_module",
+      "module": "vllm_hust_stateharbor",
+      "object": "StateHarborDescriptor",
+      "status": "import_only"
+    }
+  ],
+  "requires_services": [],
+  "components": [
+    {
+      "component_id": "request-owned-runtime",
+      "contracts": ["vllm.scheduler.request-ownership.v1"],
+      "execution_planes": ["scheduler", "worker", "bridge", "device"],
+      "isolation": "trusted_in_process",
+      "implementation_ref": "vllm_hust_stateharbor:StateHarborDescriptor",
+      "permissions": ["device_access", "ipc", "shared_memory"]
+    }
+  ],
+  "activation": {
+    "entry_points": [],
+    "environment": {},
+    "additional_config": {}
+  }
+}
